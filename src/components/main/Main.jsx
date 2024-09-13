@@ -1,9 +1,8 @@
-import MoviseList from "./MoviesList";
-
+import MoviesList from "../main/MoviesList";
 export default function Main() {
   return (
     <main>
-      <MoviseList />
+      <MoviesList />
     </main>
   );
 }

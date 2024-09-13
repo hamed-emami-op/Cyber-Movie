@@ -1,22 +1,11 @@
-import { SwiperSlide, Swiper } from "swiper/react";
-// import imgea from "../../assets/hamed1.png";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import MoviseCard from "../movies/MoviesCard";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useMovieDB } from "../../hooks/useMovieDB";
 
 export default function HeaderSlider({ setBg }) {
-  const [moviesImg, setMovies] = useState([]);
+  const [data] = useMovieDB("movie/popular");
 
-  async function loadMovies() {
-    const { data } = await axios.get(
-      "https://api.themoviedb.org/3/movie/popular?api_key=57f8c1b9148d92540486d9ecad2d99fc"
-    );
-    setMovies(data.results);
-  }
-  useEffect(() => {
-    loadMovies();
-  }, []);
   return (
     <div className="mt-6">
       <Swiper
@@ -40,15 +29,18 @@ export default function HeaderSlider({ setBg }) {
         autoplay={{ delay: 3000 }}
         loop
       >
-        {moviesImg.map((move) => (
-          <SwiperSlide key={move}>
-            <div onMouseOver={() => setBg(`https://image.tmdb.org/t/p/w780/${move.backdrop_path}`)}>
-              <MoviseCard
-                move={move}
-              />
-            </div>
-          </SwiperSlide>
-        ))}
+        {data &&
+          data.results.map((move) => (
+            <SwiperSlide key={move.id}>
+              <div
+                onMouseOver={() =>
+                  setBg(`https://image.tmdb.org/t/p/w780/${move.backdrop_path}`)
+                }
+              >
+                <MoviseCard move={move} />
+              </div>
+            </SwiperSlide>
+          ))}
       </Swiper>
     </div>
   );

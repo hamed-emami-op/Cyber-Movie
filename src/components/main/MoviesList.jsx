@@ -1,4 +1,4 @@
-import MoviseListSlider from "./MoviesListSlider";
+import MoviesListSlider from "./MoviesListSlider";
 
 const movies = [
   `http://busterhtml.mbkip3ms9u-e92498n216kr.p.temp-site.link/images/uploads/slider1.jpg`,
@@ -11,7 +11,7 @@ const movies = [
   `http://busterhtml.mbkip3ms9u-e92498n216kr.p.temp-site.link/images/uploads/slider4.jpg`,
 ];
 
-export default function Home() {
+export default function MoviesList() {
   return (
     <div className="container">
       <div className="pt-8">
@@ -24,7 +24,7 @@ export default function Home() {
             <li>In Theaters</li>
           </ul>
         </div>
-        <MoviseListSlider movies={movies} />
+        <MoviesListSlider movies={movies} />
       </div>
 
       <div className="pt-8">
@@ -35,7 +35,7 @@ export default function Home() {
             <li>TV</li>
           </ul>
         </div>
-        <MoviseListSlider movies={movies} />
+        <MoviesListSlider movies={movies} />
       </div>
     </div>
   );

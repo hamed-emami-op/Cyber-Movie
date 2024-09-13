@@ -2,6 +2,7 @@ import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { fench } from "../services/fench";
 
 export const UserContext = createContext({ user: {}, session: "" });
 const apikey = "57f8c1b9148d92540486d9ecad2d99fc";
@@ -10,13 +11,20 @@ const baseUrl = "https://api.themoviedb.org/3";
 export default function UserProvider({ children }) {
   const navigate = useNavigate();
   const [user, setUser] = useState({});
+  const [favoriteMovies, setFavoriteMovies] = useState([]);
   const [session, setSession] = useState(initSession);
 
   async function getUserData() {
     const { data } = await axios.get(
       `${baseUrl}/account?api_key=${apikey}&session_id=${session}`
     );
+    fetchFavoriteMovies(data.id);
     setUser(data);
+  }
+
+  async function fetchFavoriteMovies(id = user.id) {
+    const favResult = await fench.get(`account/${id}/favorite/movies`);
+    setFavoriteMovies(favResult.data.results);
   }
 
   useEffect(() => {
@@ -24,11 +32,11 @@ export default function UserProvider({ children }) {
       getUserData();
     }
   }, [session]);
-  
+
   function logout() {
     setUser({});
     setSession(null);
-    localStorage.clear();    
+    localStorage.clear();
   }
 
   function initSession() {
@@ -67,7 +75,16 @@ export default function UserProvider({ children }) {
   }
 
   return (
-    <UserContext.Provider value={{ user, login, session, logout }}>
+    <UserContext.Provider
+      value={{
+        user,
+        login,
+        session,
+        logout,
+        favoriteMovies,
+        fetchFavoriteMovies,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

@@ -1,30 +1,12 @@
+// MoviesListSlider.jsx
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
-import { fench} from "../../services/fench"
-import MoviesCard from "../movies/MoviesCard"
-import { useEffect, useState } from "react";
+import MoviesCard from "../movies/MoviesCard";
+import { useMovieDB } from "../../hooks/useMovieDB";
 
-export default function MovieListSlider({ type, activeTab }) {
-  const [movies, setMovies] = useState([]);
+export default function MoviesListSlider({ type, activeTab }) {
+  const [data] = useMovieDB(`${type}/${activeTab}`)
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const result = await fench(`${type}/${activeTab}`);
-        console.log(result);  // بررسی داده‌ها
-        if (result && Array.isArray(result)) {
-          setMovies(result);  // اگر آرایه باشد
-        } else if (result?.results) {
-          setMovies(result.results);  // اگر داخل result.results باشد
-        } else {
-          console.error("Unexpected data structure", result);
-        }
-      } catch (error) {
-        console.error("Error fetching movies:", error);
-      }
-    })();
-  }, [type, activeTab]);
-  
   return (
     <Swiper
       modules={[Autoplay]}
@@ -45,9 +27,9 @@ export default function MovieListSlider({ type, activeTab }) {
         },
       }}
     >
-      {movies.map((movie) => (
-        <SwiperSlide key={movie.id}>
-          <MoviesCard movie={movie} />
+      {data && data.results.map((move) => (
+        <SwiperSlide key={move.id}>
+          <MoviesCard move={move} imgSize="w342" type={type} />
         </SwiperSlide>
       ))}
     </Swiper>

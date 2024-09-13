@@ -1,23 +1,28 @@
 import { Link } from "react-router-dom";
 
-export default function MoviesCard({ move }) {
-
-  if (!move || !move.id || !move.poster_path || !move.title || !move.vote_average) {
-    return <div>Loading...</div>; 
+export default function MoviesCard({ move, type = "movie", imgSize = "780" }) {
+  if (
+    !move ||
+    !move.id ||
+    !move.poster_path ||
+    (!move.title && !move.name) ||
+    !move.vote_average
+  ) {
+    return <div>Loading...</div>;
   }
 
-  const { id, poster_path, title, vote_average } = move;
+  const { id, poster_path, title, vote_average, name } = move;
 
   return (
-    <Link to={`/Movies/${id}`} className="block">
+    <Link to={`/${type == "movie" ? "movies" : "tv"}/${id}`} className="block">
       <div className="bg-gray-300 aspect-[2/3] relative rounded overflow-hidden">
         <img
-          src={`https://image.tmdb.org/t/p/w780/${poster_path}`}
+          src={`https://image.tmdb.org/t/p/${imgSize}/${poster_path}`}
           className="object-cover w-full h-full"
-          alt={title}
+          alt={title || name}
         />
         <div className="flex flex-col justify-end p-8 absolute bottom-0 left-0 w-full h-full bg-gradient-to-t from-black via-transparent to-transparent">
-          <h3 className="text-white text-lg font-semibold">{title}</h3>
+          <h3 className="text-white text-lg font-semibold">{title || name}</h3>
           <div className="flex gap-2 mt-2 items-center">
             <span className="text-yellow-400">
               <svg
